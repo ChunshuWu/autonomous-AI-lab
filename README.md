@@ -1,5 +1,7 @@
 # Autonomous AI Lab
 
+This project is mainly a **template for your own AI research lab**. Ask your own AI agent to read this repository and customize the workflow, agent roles, dashboard, and tools to fit your research.
+
 **A team of AI researchers, with a human expert in the loop.**
 
 Give the lab a research area. Researchers read related work and propose useful questions. They discuss and vote; **you decide what happens next**. The team then designs experiments, tests an approved method, and checks what the results mean.
