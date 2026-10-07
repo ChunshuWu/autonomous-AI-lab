@@ -1,0 +1,34 @@
+import {renderMarkdown} from './markdown.mjs';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+const context={WuLabMarkdown:{renderMarkdown},esc,document:{addEventListener(){}},displayName:()=> 'Researcher',taskDocumentButton:id=>`<button>${esc(id)}</button>`,state:{},mapState:()=>({nodes:[]})};
+vm.runInNewContext(fs.readFileSync(new URL('./frontend/research-views.js',import.meta.url),'utf8'),context);
+const p={question:'Can the idea help?',prior_work:'Existing progress.',gap:'Unanswered.',factor:'<script>unsafe()</script>',support:'A testable reason.',outcome:'Fewer errors.',conditions:'Fixed data.'};
+const meeting={summary:'Old verbose prose',purpose:'General purpose',suggestions:[{text:'Secret peer transcript'}],presentations:[{id:'p',title:'Scientific question',task_id:'saved',presentation:p}],votes:[{agent_id:'a',choice:'p',reason:'Decisive evidence.'},{agent_id:'b',choice:'p',reason:'Same conclusion.'}]};
+const before=JSON.stringify(meeting),html=context.meetingBody(meeting);
+assert(html.includes('Converged: all 2'));assert(!html.includes('Old verbose prose'));assert(!html.includes('General purpose'));assert(!html.includes('Secret peer transcript'));assert(html.includes('Idea'));assert(html.includes('Why it may help'));assert(html.includes('Outcome to test'));assert(html.includes('&lt;script&gt;'));assert(!html.includes('<script>'));assert(html.includes('saved'));assert(html.includes('data-action="meeting-candidate-jump"'));assert.equal(JSON.stringify(meeting),before);
+assert(context.meetingConvergence({votes:[{choice:'a'},{choice:'b'}]}).startsWith('Not converged'));
+assert(context.meetingConvergence({votes:[{choice:'none_is_ready'}]}).includes('none is ready'));
+console.log('Meeting display: convergence only, saved candidate explanations, linked choices, hidden transcript, and safe rendering passed.');
+
+const question={id:'director-question',body:'Explain an operation.',created_at:'2026-10-06T08:00:00Z',replies:[]};
+context.date=x=>x;
+context.state.tasks=[{id:'reply',agent_id:'o',source:{question_id:question.id},status:'queued'}];
+assert(context.recordMessages([question]).includes('Queued for a worker.'));
+context.state.tasks[0].status='running';
+assert(context.recordMessages([question]).includes('Researcher is answering.'));
+context.state.tasks[0].status='failed';
+assert(context.recordMessages([question]).includes('Reply needs attention.'));
+question.replies=[{agent_id:'o',body:'One circuit instruction.',created_at:question.created_at,task_id:'reply'}];
+assert(context.recordMessages([question]).includes('One circuit instruction.'));
+assert(!context.recordMessages([question]).includes('chat-waiting'));
+console.log('Question display follows the current task queue and shows delivered answers.');
+assert.match(context.experimentOutcomes({status:'completed',execution_outcome:'complete',scientific_outcome:'negative'}),/completed.*negative/);
+assert.match(context.experimentOutcomes({status:'stopped',execution_outcome:'partial',scientific_outcome:'not_tested'}),/Partial experiment.*not tested/);
+assert.match(context.experimentOutcomes({status:'completed'}),/not explicitly recorded/);
+assert(!context.experimentOutcomes({status:'completed'}).includes('positive'));
+console.log('Experiment display separates execution, untested comparisons and valid negative findings without inferring legacy success.');
+
+const compared=structuredClone(meeting);compared.presentations[0].presentation.rejection_check='Unlike proposal-old, this uses available measurements.';assert(context.meetingBody(compared).includes('Unlike proposal-old, this uses available measurements.'));console.log('The candidate comparison with rejected ideas is visible.');

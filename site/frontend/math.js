@@ -1,0 +1,1 @@
+document.querySelectorAll('.math-source').forEach(el=>{katex.render(el.textContent,el,{displayMode:el.dataset.display==='true',throwOnError:false,trust:false,strict:'ignore',maxExpand:1000,maxSize:20});});

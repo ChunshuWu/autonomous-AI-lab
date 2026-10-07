@@ -1,0 +1,40 @@
+import assert from 'node:assert/strict';
+import {Store} from './store.mjs';
+import {adapter} from './tests.mjs';
+import {assets} from './generated.mjs';
+import {seeds} from './fixtures/seeds.mjs';
+import {cats} from './identities.mjs';
+import {permission} from './logic.mjs';
+import {reportLifecycle} from './report-lifecycle.mjs';
+import worker from './worker.mjs';
+
+const db=adapter(':memory:',true),store=new Store(db,seeds);await store.init();
+await store.create('old-research',{name:'Old research'},'director');
+let {state:s,revision}=await store.read('old-research');
+s.agents=[{id:'old-agent',name:'Cala',status:'working',role:'researcher',plan:[]}];
+s.deputy={enabled:true,epoch:2};s.execution_rounds=[{id:'round-old',status:'research'}];
+s.execution_jobs=[{id:'old-job',round_id:'round-old',agent_id:'old-agent',kind:'research',status:'running',lease_until:'2099-01-01'}];
+await db.prepare('UPDATE workspaces SET document=?,revision=revision+1 WHERE name=? AND revision=?').bind(JSON.stringify(s),'old-research',revision).run();
+const original=(await db.prepare('SELECT document,revision FROM workspaces WHERE name=?').bind('old-research').first());
+const env={DB:db,RUNNER_TOKEN:'test-only'},req=(path,body,headers={})=>worker.fetch(new Request('https://lab.test'+path,{method:body?'POST':'GET',body:body?JSON.stringify(body):undefined,headers}),env);
+const response=await req('/api/state');assert.equal(response.status,200);const view=await response.json();
+assert.deepEqual(view.projects,[]);assert.equal(view.state.project.kind,'empty');assert.equal(view.state.agents.length,0);assert.equal(view.state.reports.length,0);assert.ok(view.archives.some(x=>x.id==='old-research'));
+const archived=(await store.read('old-research')).state;
+assert.ok(archived.project.archived_at);assert.equal(archived.deputy.enabled,false);assert.equal(archived.execution_jobs[0].status,'cancelled');assert.equal(permission(archived,archived.agents[0]).allowed,false);
+const saved=await db.prepare('SELECT value FROM settings WHERE name=?').bind('archive:fresh-start-20261005:old-research:'+original.revision).first();assert.equal(saved.value,original.document);
+await assert.rejects(()=>store.apply('old-research',{action:'resume_lab'},'director'),/archived/);
+await assert.rejects(()=>store.apply('old-research',{action:'claim',agent_id:'old-agent'},'worker'),/archived/);
+assert.equal((await req('/api/review-runner',{workspace:'old-research',action:'work_context'},{Authorization:'Bearer test-only'})).status,400);
+const example=(await store.read('example')).state;assert.ok(example.reports.length);assert.equal(reportLifecycle(example,example.reports[0]).status,'archived');
+assert.equal((await req('/documents/'+example.reports[0].id+'?workspace=example')).status,200);
+const first=JSON.stringify(archived);await new Store(db,seeds).init({freshStart:true});assert.equal(JSON.stringify((await store.read('old-research')).state),first);
+await store.create('new-research',{name:'New research'},'director');await new Store(db,seeds).init({freshStart:true});assert.equal((await store.projects()).length,1);assert.equal((await store.read('new-research')).state.project.archived_at,undefined);
+assert.equal((await(await req('/api/state')).json()).state.project.id,'new-research');
+assert.equal(cats.length,12);for(const cat of cats)assert.ok(assets[cat.image]);
+assert.equal((await store.library()).items.length,0); // A fresh install has no private library imports.
+// Interrupted archive retries preserve originals and do not mark the operation complete too soon.
+const retryDb=adapter(':memory:',true),retryStore=new Store(retryDb,seeds);await retryStore.init();
+const batch=retryDb.batch;let failed=false;retryDb.batch=queries=>{if(!failed){failed=true;throw Error('Temporary save failure');}return batch(queries);};
+await assert.rejects(()=>retryStore.freshStart(),/Temporary/);assert.notEqual((await retryDb.prepare('SELECT value FROM settings WHERE name=?').bind('fresh-start-20261005').first()).value,'complete');
+await retryStore.freshStart();assert.deepEqual(await retryStore.projects(),[]);
+console.log('Fresh start passed: originals retained, archives read-only, workers stopped, empty dashboard, reports readable, 12 cats intact, new projects survive restarts, interrupted archive retries safely.');

@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {deputyFixture} from './deputy-fixture.mjs';
+const f=await deputyFixture(),store=f.store,w=f.workspace,agent_id=f.agents[0].id,runner_id='fixture';
+await store.apply(w,{action:'heartbeat',runner_id,agent_ids:f.agents.map(a=>a.id),orchestrator_id:f.agents[3].id,capabilities:['deputy']},'reply_runner');
+const question=await store.apply(w,{action:'review_question',report_id:f.report.id,agent_id,body:'Explain the saved source check.',client_id:'before-maintenance'},'director');
+const claim=await store.apply(w,{action:'claim',runner_id,question_id:question.id,agent_id},'reply_runner');assert(claim);
+const before=(await store.read(w)).state;
+await store.apply(w,{action:'maintenance',runner_id,enabled:true},'reply_runner');
+await store.apply(w,{action:'renew',runner_id,...claim},'reply_runner');
+assert.equal(await store.apply(w,{action:'claim',runner_id,question_id:question.id,agent_id},'reply_runner'),null);
+const held=(await store.read(w)).state;for(const key of ['agents','paused','deputy','reports','decisions'])assert.deepEqual(held[key],before[key]);
+await assert.rejects(()=>store.apply(w,{action:'maintenance',runner_id:'other',enabled:false},'reply_runner'));
+await store.apply(w,{action:'maintenance',runner_id,enabled:false},'reply_runner');assert.equal((await store.read(w)).state.runner_maintenance,undefined);
+console.log('PASS: temporary upgrade hold blocks new claims, preserves active leases and research authority, and clears safely.');

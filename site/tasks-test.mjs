@@ -1,0 +1,103 @@
+import assert from 'node:assert/strict';
+import {Store} from './store.mjs';
+import {adapter} from './tests.mjs';
+import {seeds} from './fixtures/seeds.mjs';
+import {taskAction,submitTask} from './tasks.mjs';
+import {permission} from './logic.mjs';
+import {decideDirections} from './directions.mjs';
+const db=adapter(),store=new Store(db,seeds);await store.init();const workspace='task-check';
+await store.apply(workspace,{action:'create_project',name:'Task check'},'director');
+const add=role=>store.apply(workspace,{action:'add_agent',name:role,role,specialty:role,question:'Software check',plan:['Check saved evidence']},'director');
+const o=await add('orchestrator'),r=await add('researcher'),math=await add('mathematician');
+await assert.rejects(()=>add('domain_expert'));
+await store.apply(workspace,{action:'assign_orchestrator',agent_id:o.id},'director');
+const run=(action,p={},role='task_runner')=>store.apply(workspace,{action:'task',task_action:action,runner_id:'test',...p},role);
+const config={client_id:'allow-1',usage_mode:'hard',enabled:true,research_enabled:false,max_model_calls:5,scope:'Answer small software-test questions only.'};
+await run('configure',config,'director');await run('configure',config,'director');
+await store.apply(workspace,{action:'pause_lab'},'director');
+const one={id:'one',sender_id:o.id,agent_id:r.id,kind:'question',prompt:'What does the saved note say?',summary:'Read a note'};
+await run('submit',one,'worker');await run('submit',one,'worker');
+await run('submit',{...one,id:'two',prompt:'Summarize the first answer.',depends_on:['one']},'worker');
+await assert.rejects(()=>run('submit',{...one,id:'bad',kind:'research'},'worker'));
+assert.equal((await run('poll')).ready.length,1);
+const claim=await run('claim',{task_id:'one'});assert.ok(claim.claim.lease_id);assert.equal(await run('claim',{task_id:'one',runner_id:'other'}),null);
+const s=(await store.read(workspace)).state;assert.equal(permission(s,s.agents.find(a=>a.id===r.id)).allowed,false);
+const result={outcome:'completed',summary:'The note records a software test.',body:'This is a software test, not a scientific result.',artifacts:[{path:'/tmp/task-check/result.json',sha256:'0'.repeat(64),bytes:40}],requests:[],records:[],usage:{input_tokens:100,output_tokens:50}};
+const complete={...claim.claim,completion_id:'one:result',result};
+await run('complete',complete);await run('complete',complete);assert.equal((await run('poll')).ready[0].id,'two');
+await assert.rejects(()=>run('complete',{...complete,result:{...result,body:'Changed'}}));
+assert.equal((await store.read(workspace)).state.tasks.length,2);
+const two=await run('claim',{task_id:'two'});assert.equal(two.dependencies[0].summary,result.summary);
+await run('fail',{...two.claim,error:'Deliberate fixture failure'});assert.equal((await run('poll')).ready.length,0);
+await run('retry',{task_id:'two',sender_id:o.id},'worker');assert.equal((await run('poll')).ready.length,1);
+await run('configure',{...config,client_id:'allow-2',enabled:false},'director');assert.equal((await run('poll')).ready.length,0);
+await assert.rejects(()=>run('claim',{task_id:'missing'}));
+// Lease expiry does not silently run a second copy.
+const clone=structuredClone(s);const current=Date.now();clone.tasks[0].lease_until=new Date(current-1).toISOString();taskAction(clone,{action:'poll',runner_id:'test'},'task_runner',current);assert.equal(clone.tasks[0].status,'failed');assert.equal(clone.warnings[0].status,'open');
+// A saved selection is enough to mark the proposal active, with no execution permission.
+const selected=structuredClone(s);selected.research_map={revision:1,nodes:[{id:'p1',title:'Question',summary:'Saved proposal',status:'unexplored',report_refs:[],evidence:[]}],history:[]};selected.research_records={meeting:[{id:'m1',status:'completed',proposal_ids:['p1'],decision:'Choose p1',votes_revealed:true,votes:[{agent_id:r.id,choice:'p1'}]}]};
+decideDirections(selected,{expected_revision:1,choices:[{id:'p1',status:'under_exploration'}]});assert.equal(selected.paused,true);assert.equal(permission(selected,selected.agents.find(a=>a.id===r.id)).allowed,false);
+// Data migration preserves names, IDs, cat identities and history.
+const doc=structuredClone(s);doc.agents[1].role='domain_expert';await db.prepare('UPDATE workspaces SET document=? WHERE name=?').bind(JSON.stringify(doc),workspace).run();await db.prepare('DELETE FROM settings WHERE name=?').bind('researcher-roles-20261005').run();await store.migrateRoles();const migrated=(await store.read(workspace)).state;assert.equal(migrated.agents[1].role,'researcher');assert.equal(migrated.agents[1].id,doc.agents[1].id);assert.deepEqual(migrated.decisions,doc.decisions);
+console.log('Passed task dependencies, idle polling, claim exclusivity, durable completion/retry, held research, failure recovery, budget/allowance, selection without reports and role migration.');
+
+// Dashboard questions carry the reviewed evidence and preserve longer user questions.
+const questions=structuredClone(s);questions.tasks=[];questions.task_policy.used_calls=0;questions.task_policy.max_model_calls=20;
+questions.record_questions=[{id:'fixture-question',agent_id:r.id,body:'Explain this result. '+'.'.repeat(5000),created_at:new Date(current-20000).toISOString(),replies:[],record_snapshot:{id:'e1',title:'Readiness',results:[{metric:'shots',value:20}],history:[{irrelevant:'old'}]}}];
+questions.orchestrator_inbox=[{question_id:'fixture-question'}];
+assert.equal(taskAction(questions,{action:'poll',runner_id:'test'},'task_runner',current).ready.length,1);
+const qp=taskAction(questions,{action:'claim',task_id:'question:fixture-question',runner_id:'test'},'task_runner',current);
+assert(qp.reviewed_record.text.includes('shots'));assert(!qp.reviewed_record.text.includes('irrelevant'));assert(qp.task.prompt.length>4000);
+const peerResult={...result,artifacts:[{...result.artifacts[0],path:'/tmp/task-check/report.md'}],requests:[{agent_id:math.id,question:'Explain the arithmetic in the saved findings.'}]};
+taskAction(questions,{action:'complete',...qp.claim,completion_id:'fixture-answer',result:peerResult},'task_runner',current);
+assert.equal(questions.record_questions[0].replies.length,1);
+const peer=questions.tasks.find(t=>t.agent_id===math.id);assert.deepEqual(peer.input_refs,['/tmp/task-check/report.md']);assert.deepEqual(peer.document_ids,[qp.task.id]);
+const followup=questions.tasks.find(t=>t.id.endsWith(':answers'));assert(followup.depends_on.includes(peer.id));assert(followup.document_ids.includes(qp.task.id));assert.deepEqual(followup.input_refs,['/tmp/task-check/report.md']);
+const pending=taskAction(questions,{action:'poll',runner_id:'test'},'task_runner',current);assert.deepEqual(pending.ready.map(t=>t.id),[peer.id]);
+assert.equal(questions.tasks.length,3);
+console.log('Passed automatic dashboard-question import, relevant record evidence, long questions, peer evidence handoff and reply dependencies.');
+
+// Director questions go ahead of queued research, without interrupting workers
+// or bypassing dependencies, per-agent exclusivity, holds or the allowance.
+const priority=structuredClone(s);priority.tasks=[];priority.paused=false;
+priority.task_policy.research_enabled=true;priority.task_policy.used_calls=0;priority.task_policy.max_model_calls=20;
+const enqueue=(id,agent_id,kind,p={})=>taskAction(priority,{action:'submit',id,agent_id,kind,prompt:id,...p},'director',current);
+enqueue('older-research',r.id,'research');enqueue('later-research',math.id,'research');
+priority.record_questions=[{id:'director-priority',agent_id:o.id,body:'Explain operation.',created_at:new Date(current-20000).toISOString(),replies:[],record_snapshot:{id:'p1',title:'Operation question'}}];
+const pollPriority=()=>taskAction(priority,{action:'poll',runner_id:'test'},'task_runner',current).ready.map(t=>t.id);
+assert.deepEqual(pollPriority(),['question:director-priority','older-research','later-research']);
+assert.equal(priority.tasks.length,3);pollPriority();assert.equal(priority.tasks.length,3);
+const occupied=taskAction(priority,{action:'claim',task_id:'older-research',runner_id:'test'},'task_runner',current);
+enqueue('question-for-busy-agent',r.id,'question');
+assert.deepEqual(pollPriority(),['question:director-priority','question-for-busy-agent','later-research']);
+assert.equal(priority.tasks.find(t=>t.id==='older-research').status,'running');
+const busyReply=taskAction(priority,{action:'claim',task_id:'question-for-busy-agent',runner_id:'test'},'task_runner',current);
+assert(busyReply.task.interactive_reply);assert.equal(busyReply.active_work[0].task_id,'older-research');
+assert.equal(priority.agents.find(a=>a.id===r.id).work_status.task_id,'older-research');
+enqueue('second-question-for-busy-agent',r.id,'question');
+assert(!pollPriority().includes('second-question-for-busy-agent'));
+taskAction(priority,{action:'complete',...busyReply.claim,completion_id:'busy-reply',result:{...result,requests:[]}},'task_runner',current);
+assert.equal(priority.tasks.find(t=>t.id==='older-research').status,'running');
+assert.equal(priority.agents.find(a=>a.id===r.id).work_status.task_id,'older-research');
+assert(pollPriority().includes('second-question-for-busy-agent'));
+// A peer request uses the normal queue and does not overlap the ongoing research.
+enqueue('peer-question',r.id,'question',{sender_id:o.id});assert(!pollPriority().includes('peer-question'));
+enqueue('dependent-question',o.id,'question',{depends_on:['later-research']});
+assert(!pollPriority().includes('dependent-question'));
+priority.paused=true;
+assert.deepEqual(pollPriority(),['question:director-priority','second-question-for-busy-agent']);
+priority.task_maintenance={until:new Date(current+60000).toISOString()};assert.deepEqual(pollPriority(),[]);
+priority.task_maintenance=null;priority.task_policy.enabled=false;assert.deepEqual(pollPriority(),[]);
+console.log('Passed director question priority, stable research order, safe same-agent replies, reply serialization and preserved research status, dependencies, pause, maintenance and disabled service.');
+const managed=structuredClone(s);managed.tasks=[];managed.paused=false;managed.task_policy.enabled=true;managed.task_policy.research_enabled=true;managed.task_policy.used_calls=0;
+submitTask(managed,{id:'managed-owner',agent_id:r.id,sender_id:o.id,kind:'engineering',prompt:'Fixture recovery',notify_orchestrator:true,source:{type:'experiment_owner_recovery'}},'worker',current);
+const ownerClaim=taskAction(managed,{action:'claim',task_id:'managed-owner',runner_id:'test'},'task_runner',current);
+taskAction(managed,{action:'complete',...ownerClaim.claim,completion_id:'owner:done',result:peerResult},'task_runner',current);
+assert.equal(managed.tasks.length,1);assert.equal(managed.tasks[0].result.requests.length,1);
+console.log('Managed owner results keep specialist questions for the assessment checkpoint without spawning recursive reply or notification chains.');
+const blockedPeer=structuredClone(managed);blockedPeer.tasks=[];
+submitTask(blockedPeer,{id:'blocked-question',agent_id:r.id,sender_id:o.id,kind:'question',prompt:'Locate the missing artifact from supplied evidence'},'worker',current);
+const blockedClaim=taskAction(blockedPeer,{action:'claim',task_id:'blocked-question',runner_id:'test'},'task_runner',current);
+taskAction(blockedPeer,{action:'complete',...blockedClaim.claim,completion_id:'blocked:done',result:{...peerResult,outcome:'blocked'}},'task_runner',current);
+assert.equal(blockedPeer.tasks.length,1);assert.equal(blockedPeer.tasks[0].result.requests.length,1);
+console.log('Blocked questions retain their evidence and requests without generating dependent tasks that are certain to fail.');

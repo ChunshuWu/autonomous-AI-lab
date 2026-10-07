@@ -1,0 +1,27 @@
+/* Shared by experiment views and report documents. */
+.report-figure{min-width:0;max-width:100%;margin:24px 0;container-type:inline-size}
+.report-figure .table-wrap{max-width:100%;overflow:auto;overscroll-behavior-x:contain}
+.report-figure .table-wrap:focus-visible{outline:2px solid #397d5e;outline-offset:3px}
+.report-figure .visual-table{width:100%;table-layout:auto;border-collapse:collapse;font-size:15px}
+.report-figure .visual-table th,.report-figure .visual-table td{min-width:14ch;padding:12px 16px;vertical-align:top;text-align:left;overflow-wrap:normal;word-break:normal;line-height:1.5}
+.report-figure .visual-table th{background:#edf2e9;font-weight:600}
+.report-figure .visual-table .number{text-align:right;font-variant-numeric:tabular-nums;min-width:11ch}
+.report-figure .visual-table td.number{white-space:nowrap}
+.report-figure .bar-unit{font-size:14px;line-height:1.5;color:#526359;margin:0 0 14px;white-space:normal}
+.report-figure .bar-scale,.report-figure .bar-row{display:grid;grid-template-columns:minmax(150px,34%) minmax(0,1fr) 5.5rem;gap:14px;align-items:center}
+.report-figure .bar-axis{grid-column:2;display:flex;justify-content:space-between;font-size:13px;margin:0;color:#526359}
+.report-figure .bar-row{margin:18px 0;font-size:15px;line-height:1.45}
+.report-figure .bar-label{overflow-wrap:break-word;word-break:normal}
+.report-figure .bar-value{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums;font-size:15px}
+.report-figure .bar-track{height:24px;background:#edf0ea;border-radius:4px;overflow:hidden}
+.report-figure .bar-fill{height:100%;background:#397d5e}
+.report-figure .bar-fill.series-1{background:#ad533f}
+.report-figure .bar-fill.series-2{background:#505eae}
+.report-figure figcaption{font-size:15px;line-height:1.6;margin-top:18px;color:#526359}
+@container(max-width:540px){
+ .report-figure .bar-scale,.report-figure .bar-row{grid-template-columns:minmax(0,1fr) 5.5rem;gap:6px 12px}
+ .report-figure .bar-axis{grid-column:1}
+ .report-figure .bar-label{grid-column:1 / -1}
+ .report-figure .bar-track{grid-column:1}
+ .report-figure .bar-row{margin:18px 0 22px}
+}

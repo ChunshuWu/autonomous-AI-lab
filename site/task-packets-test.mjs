@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import {Store} from './store.mjs';
+import {adapter} from './tests.mjs';
+import {seeds} from './fixtures/seeds.mjs';
+import {permission} from './logic.mjs';
+import worker from './worker.mjs';
+const db=adapter(),store=new Store(db,seeds);await store.init();const ws='packet-repair-test';await store.apply(ws,{action:'create_project',name:'Isolated software check'},'director');
+const add=role=>store.apply(ws,{action:'add_agent',name:role,role,specialty:'Software fixture',question:'Check packets',plan:['One check']},'director');
+const o=await add('orchestrator'),r=await add('researcher');await store.apply(ws,{action:'assign_orchestrator',agent_id:o.id},'director');
+const run=(action,p={},role='task_runner')=>store.apply(ws,{action:'task',task_action:action,runner_id:'fixture',...p},role);
+await run('configure',{client_id:'fixture',enabled:true,research_enabled:false,max_model_calls:20,scope:'Software checks only'},'director');
+await store.apply(ws,{action:'pause_lab'},'director');
+const state=async()=>(await store.read(ws)).state;
+const status={action:'status',agent_id:o.id,client_id:'coordinate-1',task_id:'review-packets',expected_revision:0,work_state:'working',work_kind:'coordination',summary:'Checking saved packets.'};
+const before=await state();const running=await store.apply(ws,status,'worker');assert.equal(running.state,'working');let s=await state();assert.equal(s.paused,before.paused);assert.equal(permission(s,s.agents.find(a=>a.id===o.id)).allowed,false);assert.deepEqual(s.task_policy,before.task_policy);
+assert.deepEqual(await store.apply(ws,status,'worker'),running);
+await assert.rejects(()=>store.apply(ws,{...status,agent_id:r.id,client_id:'not-coordinator'},'worker'),/assigned orchestrator/);
+await assert.rejects(()=>store.apply(ws,{...status,work_kind:'research',client_id:'no-research',expected_revision:1},'worker'),/Claim released/);
+await store.apply(ws,{...status,client_id:'coordinate-done',work_state:'finished',expected_revision:1},'worker');
+await assert.rejects(()=>store.apply(ws,{...status,client_id:'late',expected_revision:1},'worker'),/status changed/);
+const submit=(id,extra={})=>run('submit',{id,sender_id:o.id,agent_id:r.id,kind:'question',prompt:id,summary:id,...extra},'worker');
+const base={outcome:'completed',summary:'A bounded software fixture.',body:'Short answer.',document:null,artifacts:[{path:'/tmp/fixture/findings.md',sha256:'a'.repeat(64),bytes:9}],requests:[],usage:{input_tokens:20,output_tokens:10},usage_scope:'task'};
+async function finish(id,result){const claim=await run('claim',{task_id:id});await run('complete',{...claim.claim,completion_id:id+':done',result:{...base,...result}});return claim;}
+const long='Complete engineering detail. '.repeat(330)+'IMPORTANT TAIL: do not omit the final numerical checks.';
+assert(long.length>6000);await submit('paper-a');await finish('paper-a',{body:long});
+await submit('paper-b');await finish('paper-b',{body:'Short complete candidate.',document:'# Details\n\n| Check | Result |\n| --- | --- |\n| Saved | Yes |\n\n<script>alert(1)</script>\n\nFinal assumption.'});
+await submit('legacy-consumer',{depends_on:['paper-a']});const legacy=await run('claim',{task_id:'legacy-consumer'});assert.equal(legacy.dependencies[0].body,long);await run('complete',{...legacy.claim,completion_id:'legacy:done',result:base});
+await assert.rejects(()=>submit('missing-vote',{kind:'vote'}),/final candidates/);
+const decision_packet={criteria:'Choose the stronger complete candidate; none_is_ready is allowed.',candidates:[{id:'a',task_id:'paper-a'},{id:'b',task_id:'paper-b'}]};
+await submit('fresh-vote',{kind:'vote',decision_packet,depends_on:['legacy-consumer']});const vote=await run('claim',{task_id:'fresh-vote'});
+assert.equal(vote.decision_packet.criteria,decision_packet.criteria);assert.equal(vote.decision_packet.candidates[0].body,long);assert(vote.decision_packet.candidates[1].document.endsWith('Final assumption.'));
+assert.equal(vote.dependencies.find(d=>d.id==='paper-a').body,undefined);assert.equal(vote.dependencies.find(d=>d.id==='paper-a').body_location,'decision_packet');
+const receipt=vote.decision_packet.candidates.map(({id,task_id,completion_id})=>({id,task_id,completion_id}));
+const delivered={...base,body:JSON.stringify({choice:'a',reason:'This is a complete software-test reason. '.repeat(10)}),decision_receipt:receipt};
+await assert.rejects(()=>run('complete',{...vote.claim,completion_id:'vote:done',result:{...delivered,decision_receipt:[]}}),/complete decision packet/);
+await assert.rejects(()=>run('complete',{...vote.claim,completion_id:'vote:done',result:{...delivered,body:JSON.stringify({choice:'invented',reason:'No'})}}),/supplied candidate/);
+await run('complete',{...vote.claim,completion_id:'vote:done',result:delivered});assert.equal((await state()).paused,true);
+await submit('ask-engineer');await finish('ask-engineer',{requests:[{agent_id:o.id,question:'Explain the saved calculation briefly and put details in a document.'}]});
+const peerId='ask-engineer:request:0';await finish(peerId,{document:long});const reply=await run('claim',{task_id:'ask-engineer:answers'});assert.equal(reply.documents.find(d=>d.task_id===peerId).text,long);assert(reply.documents.some(d=>d.task_id==='ask-engineer'));assert.equal(reply.dependencies[0].body_location,'documents');assert.equal(reply.dependencies[0].body,undefined);
+await run('complete',{...reply.claim,completion_id:'answers:done',result:base});
+const req=(url)=>worker.fetch(new Request('https://lab.test'+url),{DB:db});
+const html=await(await req('/task-documents/paper-b?workspace='+ws)).text();assert(html.includes('<table>'));assert(!html.includes('<script>'));assert(html.includes('&lt;script&gt;'));assert(html.includes('Final assumption.'));
+const md=await(await req('/task-documents/'+encodeURIComponent(peerId)+'?workspace='+ws+'&format=markdown')).text();assert.equal(md,long);
+assert.equal((await req('/task-documents/paper-b?workspace=missing-project')).status,400);
+// Missing candidates hold the vote; none is ready is a valid outcome, not absent input.
+await submit('not-yet-delivered');await submit('held-vote',{kind:'vote',decision_packet:{criteria:'Wait for actual evidence.',candidates:[{id:'pending',task_id:'not-yet-delivered'}]}});assert.equal(await run('claim',{task_id:'held-vote'}),null);
+assert(!(await state()).warnings?.some(w=>w.key==='task-large-context'));
+console.log('Passed: complete fresh-session votes and version receipts, full long replies/documents, safe document rendering/download, held dependencies, and current coordination status without research permission.');
+
+// Every new turn receives the current director writing preference, including
+// existing queued tasks and fresh reviews; saved scientific inputs stay intact.
+await submit('language-update');
+const language=await run('claim',{task_id:'language-update'});
+assert.equal(language.writing_guidance_version,'nonexpert-language-v5');
+assert(language.writing_guidance.includes('Never reject a vote or block a meeting'));
+assert(language.writing_guidance.includes('whenever any agent writes'));
+assert.equal(language.task.prompt,'language-update');
+assert.equal((await state()).tasks.find(t=>t.id==='language-update').writing_guidance_version,language.writing_guidance_version);
+assert.deepEqual(language.documents,[]);
+console.log('PASS: current writing instruction reaches workers without changing assigned work.');
+await run('complete',{...language.claim,completion_id:'language-update:done',result:base});
+await submit('full-dependency',{depends_on:['paper-b']});
+const fullDependency=await run('claim',{task_id:'full-dependency'});
+assert(fullDependency.dependencies[0].body.endsWith('Final assumption.'));
+assert(fullDependency.dependencies[0].body.includes('# Details'));
+console.log('PASS: direct dependencies carry complete saved documents, not just summaries or paths.');

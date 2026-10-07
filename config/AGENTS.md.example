@@ -1,0 +1,9 @@
+# WuLab release workspace
+
+Read `skill/wulab-research/SKILL.md` and its five model files when doing research. Follow the assigned role and use simple language. For software work, read `README.md` and the relevant code before editing.
+
+Keep private state in `.wulab/`, project work in `projects/ID/workspace/`, and shared material in `library/` and `data/`. Never include credentials or private research data in a public commit.
+
+The example is isolated: its meetings are scripted, while its synthetic experiment can be rerun. Do not report it as evidence of an actual autonomous agent run. Creating a demo or running tests does not authorize paid research.
+
+Use the saved task service for active teams. Preserve completed work, genuine scientific uncertainty, and director holds when fixing an obstacle. Report what was tested and any remaining compatibility limits.

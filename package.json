@@ -1,0 +1,21 @@
+{
+  "name": "autonomous-ai-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI researchers, shared evidence, and a human director in one research dashboard.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "python3 site/build.py",
+    "example": "python3 examples/missing-measurements/run.py && python3 examples/missing-measurements/project.py",
+    "demo": "npm run example && npm run build && node scripts/serve.mjs --demo",
+    "start": "npm run build && node scripts/serve.mjs",
+    "test": "npm run example && npm run build && node scripts/test.mjs",
+    "setup": "python3 scripts/setup.py",
+    "workers": "python3 scripts/workers.py",
+    "test:local": "python3 scripts/test_local.py"
+  },
+  "license": "MIT"
+}

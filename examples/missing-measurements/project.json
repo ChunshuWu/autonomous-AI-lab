@@ -1,0 +1,1132 @@
+{
+  "name": "The missing-reading clue",
+  "mode": "example",
+  "project": {
+    "id": "missing-measurements-demo",
+    "name": "The missing-reading clue",
+    "kind": "example",
+    "topic": "Can a blank sensor reading be a useful clue?",
+    "topic_status": "confirmed",
+    "workspace": "examples/missing-measurements"
+  },
+  "paused": false,
+  "agents": [
+    {
+      "id": "r1",
+      "name": "Alugalug",
+      "role": "researcher",
+      "dashboard_cat_id": "alugalug",
+      "specialty": "Check what the evidence supports",
+      "question": "Check what the evidence supports",
+      "plan": [
+        {
+          "id": "r1-plan",
+          "task": "Check what the evidence supports"
+        }
+      ],
+      "status": "paused",
+      "last_seen": "2026-01-15T10:46:00Z",
+      "work_status": {
+        "base_status": "paused",
+        "state": "sleeping",
+        "summary": "Check what the evidence supports",
+        "waiting_for": "Check what the evidence supports",
+        "updated_at": "2026-01-15T10:46:00Z"
+      },
+      "latest_report": null
+    },
+    {
+      "id": "r2",
+      "name": "George Rufus",
+      "role": "researcher",
+      "dashboard_cat_id": "lonely",
+      "specialty": "Find useful related work",
+      "question": "Find useful related work",
+      "plan": [
+        {
+          "id": "r2-plan",
+          "task": "Find useful related work"
+        }
+      ],
+      "status": "paused",
+      "last_seen": "2026-01-15T10:46:00Z",
+      "work_status": {
+        "base_status": "paused",
+        "state": "sleeping",
+        "summary": "Find useful related work",
+        "waiting_for": "Find useful related work",
+        "updated_at": "2026-01-15T10:46:00Z"
+      },
+      "latest_report": null
+    },
+    {
+      "id": "r3",
+      "name": "Chai Kichi",
+      "role": "researcher",
+      "dashboard_cat_id": "hahee",
+      "specialty": "Check the comparison is fair",
+      "question": "Check the comparison is fair",
+      "plan": [
+        {
+          "id": "r3-plan",
+          "task": "Check the comparison is fair"
+        }
+      ],
+      "status": "paused",
+      "last_seen": "2026-01-15T10:46:00Z",
+      "work_status": {
+        "base_status": "paused",
+        "state": "sleeping",
+        "summary": "Check the comparison is fair",
+        "waiting_for": "Check the comparison is fair",
+        "updated_at": "2026-01-15T10:46:00Z"
+      },
+      "latest_report": null
+    },
+    {
+      "id": "engineer",
+      "name": "Johnson",
+      "role": "engineer",
+      "dashboard_cat_id": "johnson",
+      "specialty": "Reproduce the three experiment results",
+      "question": "Reproduce the three experiment results",
+      "plan": [
+        {
+          "id": "engineer-plan",
+          "task": "Reproduce the three experiment results"
+        }
+      ],
+      "status": "paused",
+      "last_seen": "2026-01-15T10:46:00Z",
+      "work_status": {
+        "base_status": "paused",
+        "state": "sleeping",
+        "summary": "Reproduce the three experiment results",
+        "waiting_for": "Reproduce the three experiment results",
+        "updated_at": "2026-01-15T10:46:00Z"
+      },
+      "latest_report": null
+    },
+    {
+      "id": "librarian",
+      "name": "Billy",
+      "role": "librarian",
+      "dashboard_cat_id": "billy",
+      "specialty": "Keep sources and code easy to find",
+      "question": "Keep sources and code easy to find",
+      "plan": [
+        {
+          "id": "librarian-plan",
+          "task": "Keep sources and code easy to find"
+        }
+      ],
+      "status": "paused",
+      "last_seen": "2026-01-15T10:46:00Z",
+      "work_status": {
+        "base_status": "paused",
+        "state": "sleeping",
+        "summary": "Keep sources and code easy to find",
+        "waiting_for": "Keep sources and code easy to find",
+        "updated_at": "2026-01-15T10:46:00Z"
+      },
+      "latest_report": null
+    },
+    {
+      "id": "orchestrator",
+      "name": "Leo",
+      "role": "orchestrator",
+      "dashboard_cat_id": "numnum",
+      "specialty": "Coordinate the next approved test",
+      "question": "Coordinate the next approved test",
+      "plan": [
+        {
+          "id": "orchestrator-plan",
+          "task": "Coordinate the next approved test"
+        }
+      ],
+      "status": "paused",
+      "last_seen": "2026-01-15T10:46:00Z",
+      "work_status": {
+        "base_status": "paused",
+        "state": "sleeping",
+        "summary": "Coordinate the next approved test",
+        "waiting_for": "Coordinate the next approved test",
+        "updated_at": "2026-01-15T10:46:00Z"
+      },
+      "latest_report": "report-first-result"
+    },
+    {
+      "id": "mathematician",
+      "name": "Serafino",
+      "role": "mathematician",
+      "dashboard_cat_id": "serafino",
+      "specialty": "Check why the missing flag can help",
+      "question": "Check why the missing flag can help",
+      "plan": [
+        {
+          "id": "mathematician-plan",
+          "task": "Check why the missing flag can help"
+        }
+      ],
+      "status": "paused",
+      "last_seen": "2026-01-15T10:46:00Z",
+      "work_status": {
+        "base_status": "paused",
+        "state": "sleeping",
+        "summary": "Check why the missing flag can help",
+        "waiting_for": "Check why the missing flag can help",
+        "updated_at": "2026-01-15T10:46:00Z"
+      },
+      "latest_report": null
+    }
+  ],
+  "orchestrator_id": "orchestrator",
+  "reports": [
+    {
+      "id": "report-first-result",
+      "agent_id": "orchestrator",
+      "agent_name": "Leo",
+      "version": 1,
+      "title": "A blank reading can be a clue",
+      "summary": "A known, simple method cut error by 25.0% in one toy setting. The random-missingness check showed its limit.",
+      "created_at": "2026-01-15T10:46:00Z",
+      "previous_steps": [],
+      "next_steps": [
+        {
+          "id": "next-real",
+          "task": "Find a real sensor dataset with recorded failures.",
+          "why": "The toy test cannot tell us how common this pattern is.",
+          "success": "We can trace why and when readings go missing."
+        }
+      ],
+      "questions": [],
+      "sources": [],
+      "document": {
+        "background": "Imagine a sensor that stops reporting when it gets too hot. Filling the blank with its average makes the input look ordinary. But the blank itself may be a warning.\n\nThis example uses a known idea: add a yes/no input saying which readings were missing. The data are generated locally. Team meetings and votes are scripted examples.",
+        "progress": "We compared two simple predictors on separate test data. Both filled gaps using training-set averages. Only one received the extra missing-reading flags.\n\nWith overload-related failures, error fell from 1.613 to 1.211: **25.0% lower**. When readings disappeared at random, the flags gave no benefit.\n\nThis supports the mechanism in this toy example. It does not establish a new research contribution or a real-world improvement.",
+        "next_steps": "Find real data that records sensor failures. Check whether the pattern changes over time, and test on a later period. Keep the average-filling baseline.\n\nRerun the example with `python3 examples/missing-measurements/run.py`. Inspect all per-seed values in `results.json`."
+      },
+      "figures": [
+        {
+          "section": "background",
+          "visual": {
+            "type": "flow",
+            "title": "Keep the clue",
+            "nodes": [
+              {
+                "label": "Sensor goes blank",
+                "detail": "The cause may matter."
+              },
+              {
+                "label": "Fill + mark",
+                "detail": "Use the average and a missing flag."
+              },
+              {
+                "label": "Predict",
+                "detail": "Test on new rows."
+              }
+            ],
+            "caption": "The only added information is which sensor readings were missing."
+          }
+        },
+        {
+          "section": "progress",
+          "visual": {
+            "type": "bars",
+            "title": "First result",
+            "max": 2,
+            "unit": "Prediction error (lower is better)",
+            "rows": [
+              {
+                "label": "Fill gaps only",
+                "value": 1.613,
+                "display": "1.613",
+                "series": "fill_only"
+              },
+              {
+                "label": "Fill gaps + mark blanks",
+                "value": 1.211,
+                "display": "1.211",
+                "series": "missing_flags"
+              }
+            ],
+            "caption": "Average root mean squared error over five independent train/test splits. Synthetic data, arbitrary target units. Full per-seed results are included."
+          }
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "event-0",
+      "at": "2026-01-15T10:00:00Z",
+      "actor": "Director",
+      "text": "Started a small study of missing sensor readings.",
+      "kind": "activity",
+      "record_ref": null
+    },
+    {
+      "id": "event-1",
+      "at": "2026-01-15T10:03:00Z",
+      "actor": "librarian",
+      "text": "Added the missing-value guide and a paper for comparison.",
+      "kind": "library",
+      "record_ref": null
+    },
+    {
+      "id": "event-2",
+      "at": "2026-01-15T10:08:00Z",
+      "actor": "r1",
+      "text": "Proposed testing whether a blank reading can warn us of overload.",
+      "kind": "activity",
+      "record_ref": null
+    },
+    {
+      "id": "event-3",
+      "at": "2026-01-15T10:15:00Z",
+      "actor": "orchestrator",
+      "text": "The human approved the team’s recommended question for a first small test.",
+      "kind": "meeting",
+      "record_ref": {
+        "type": "meeting",
+        "id": "meeting-question"
+      }
+    },
+    {
+      "id": "event-4",
+      "at": "2026-01-15T10:22:00Z",
+      "actor": "orchestrator",
+      "text": "The human approved marking missing readings with yes/no inputs.",
+      "kind": "meeting",
+      "record_ref": {
+        "type": "meeting",
+        "id": "meeting-method"
+      }
+    },
+    {
+      "id": "event-5",
+      "at": "2026-01-15T10:26:00Z",
+      "actor": "engineer",
+      "text": "Stopped: the sample file used a different column name.",
+      "kind": "obstacle",
+      "record_ref": null
+    },
+    {
+      "id": "event-6",
+      "at": "2026-01-15T10:28:00Z",
+      "actor": "orchestrator",
+      "text": "Checked the file and corrected the input-column mapping. Work could continue.",
+      "kind": "recovery",
+      "record_ref": null
+    },
+    {
+      "id": "event-7",
+      "at": "2026-01-15T10:35:00Z",
+      "actor": "engineer",
+      "text": "The overload test finished: marking blanks reduced error by 25.0%.",
+      "kind": "experiment",
+      "record_ref": {
+        "type": "experiment",
+        "id": "experiment-main"
+      }
+    },
+    {
+      "id": "event-8",
+      "at": "2026-01-15T10:38:00Z",
+      "actor": "r3",
+      "text": "The random-missingness check showed no benefit.",
+      "kind": "experiment",
+      "record_ref": {
+        "type": "experiment",
+        "id": "experiment-control"
+      }
+    },
+    {
+      "id": "event-9",
+      "at": "2026-01-15T10:42:00Z",
+      "actor": "r2",
+      "text": "The benefit grew when high readings were more likely to disappear.",
+      "kind": "experiment",
+      "record_ref": {
+        "type": "experiment",
+        "id": "experiment-sweep"
+      }
+    },
+    {
+      "id": "event-10",
+      "at": "2026-01-15T10:48:00Z",
+      "actor": "orchestrator",
+      "text": "The next useful step is to check a real dataset.",
+      "kind": "decision",
+      "record_ref": null
+    }
+  ],
+  "decisions": [],
+  "notifications": [],
+  "discussions": [],
+  "library": [
+    {
+      "id": "lib-indicators",
+      "kind": "tool",
+      "title": "Missing-value indicators",
+      "summary": "Official documentation for the known idea used here: preserve which inputs were missing.",
+      "source": "https://scikit-learn.org/stable/modules/impute.html#marking-imputed-values",
+      "availability": "Public documentation",
+      "reading": "Documentation used to describe the method; this demo uses its own small implementation.",
+      "topics": [
+        "Missing measurements"
+      ],
+      "checks": "Known method; no novelty claim.",
+      "project_ids": [
+        "missing-measurements-demo"
+      ],
+      "acquired_by": "librarian",
+      "read_by": [],
+      "revision": 1
+    },
+    {
+      "id": "lib-paper",
+      "kind": "paper",
+      "title": "MICE: Multivariate Imputation by Chained Equations",
+      "summary": "A reference for a different way to fill gaps. Included for comparison; not implemented in this example.",
+      "source": "https://www.jstatsoft.org/article/view/v045i03",
+      "availability": "Source link only",
+      "reading": "Abstract only; full paper is not bundled.",
+      "version": "van Buuren and Groothuis-Oudshoorn, 2011",
+      "topics": [
+        "Missing measurements"
+      ],
+      "checks": "Not an experimental baseline in this demo.",
+      "project_ids": [
+        "missing-measurements-demo"
+      ],
+      "acquired_by": "librarian",
+      "read_by": [],
+      "revision": 1
+    },
+    {
+      "id": "lib-data",
+      "kind": "dataset",
+      "title": "Synthetic sensor readings",
+      "summary": "Three sensor inputs and one target. Includes overload-linked and random missing readings.",
+      "path": "examples/missing-measurements/sample.csv",
+      "availability": "Available locally",
+      "reading": "Generated by the included experiment.",
+      "topics": [
+        "Demo data"
+      ],
+      "checks": "Independent train/test rows. Artificial data, not measurements from a real device.",
+      "project_ids": [
+        "missing-measurements-demo"
+      ],
+      "acquired_by": "librarian",
+      "read_by": [],
+      "revision": 1
+    },
+    {
+      "id": "lib-baseline",
+      "kind": "baseline",
+      "title": "Fill gaps, then fit a linear predictor",
+      "summary": "A small reusable baseline. Fill each gap with its training-set mean, then fit the predictor.",
+      "path": "examples/missing-measurements/run.py",
+      "availability": "Available locally",
+      "reading": "Full code included.",
+      "topics": [
+        "Missing measurements",
+        "Baselines"
+      ],
+      "checks": "Same data and fit as the method under test; no test-set values used during fitting.",
+      "project_ids": [
+        "missing-measurements-demo"
+      ],
+      "acquired_by": "librarian",
+      "read_by": [],
+      "revision": 1
+    },
+    {
+      "id": "lib-results",
+      "kind": "notes",
+      "title": "Results for all five random seeds",
+      "summary": "Every measured result, including the random-missingness check and the three failure settings.",
+      "path": "examples/missing-measurements/results.json",
+      "availability": "Available locally",
+      "reading": "Full results included.",
+      "topics": [
+        "Demo data"
+      ],
+      "checks": "Generated from run.py; values are not invented.",
+      "project_ids": [
+        "missing-measurements-demo"
+      ],
+      "acquired_by": "librarian",
+      "read_by": [],
+      "revision": 1
+    }
+  ],
+  "direction": "Test whether the fact that a sensor went blank improves predictions, then check when that clue stops helping.",
+  "direction_revision": 1,
+  "research_map": {
+    "revision": 1,
+    "nodes": [
+      {
+        "id": "proposal-blank",
+        "parent_id": null,
+        "title": "Can blank readings warn us of overload?",
+        "summary": "Tell the model which sensors went blank, as well as their filled-in readings.",
+        "status": "under_exploration",
+        "presentation": {
+          "question": "Can blank readings warn us of overload?",
+          "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+          "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+          "factor": "Tell the model which sensors went blank, as well as their filled-in readings.",
+          "support": "A sensor may stop reporting more often when its input is high. A blank reading can then be a clue.",
+          "outcome": "Lower prediction error on new rows, with a random-missingness check.",
+          "conditions": "A small synthetic dataset; three sensors; separate training and test rows."
+        },
+        "evidence": [],
+        "report_refs": [
+          {
+            "report_id": "report-first-result"
+          }
+        ],
+        "created_at": "2026-01-15T10:05:00Z",
+        "updated_at": "2026-01-15T10:15:00Z"
+      },
+      {
+        "id": "proposal-history",
+        "parent_id": null,
+        "title": "Can recent readings fill short gaps?",
+        "summary": "Use earlier readings from the same sensor to estimate a short gap.",
+        "status": "unexplored",
+        "presentation": {
+          "question": "Can recent readings fill short gaps?",
+          "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+          "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+          "factor": "Use earlier readings from the same sensor to estimate a short gap.",
+          "support": "Many physical signals change gradually. A recent reading may be better than the average.",
+          "outcome": "Better predictions during short gaps in a future time-series dataset.",
+          "conditions": "A small synthetic dataset; three sensors; separate training and test rows."
+        },
+        "evidence": [],
+        "report_refs": [],
+        "created_at": "2026-01-15T10:05:00Z",
+        "updated_at": "2026-01-15T10:15:00Z"
+      },
+      {
+        "id": "proposal-neighbors",
+        "parent_id": null,
+        "title": "Can sensors check one another?",
+        "summary": "Use sensors that measure related things to estimate a missing reading.",
+        "status": "unexplored",
+        "presentation": {
+          "question": "Can sensors check one another?",
+          "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+          "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+          "factor": "Use sensors that measure related things to estimate a missing reading.",
+          "support": "Nearby sensors may share information, but our first toy dataset deliberately lacks that structure.",
+          "outcome": "Lower error when sensors share a signal; defer until we have suitable data.",
+          "conditions": "A small synthetic dataset; three sensors; separate training and test rows."
+        },
+        "evidence": [],
+        "report_refs": [],
+        "created_at": "2026-01-15T10:05:00Z",
+        "updated_at": "2026-01-15T10:15:00Z"
+      },
+      {
+        "id": "proposal-hardware",
+        "parent_id": null,
+        "title": "Would an extra sensor prevent gaps?",
+        "summary": "Add a second sensor at the same location.",
+        "status": "discarded",
+        "presentation": {
+          "question": "Would an extra sensor prevent gaps?",
+          "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+          "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+          "factor": "Add a second sensor at the same location.",
+          "support": "A spare may keep measuring when the first sensor fails.",
+          "outcome": "Fewer missing readings; outside this data-only project.",
+          "conditions": "A small synthetic dataset; three sensors; separate training and test rows."
+        },
+        "evidence": [],
+        "report_refs": [],
+        "created_at": "2026-01-15T10:05:00Z",
+        "updated_at": "2026-01-15T10:15:00Z"
+      }
+    ]
+  },
+  "research_records": {
+    "method": [
+      {
+        "id": "method-flags",
+        "type": "method",
+        "revision": 1,
+        "title": "Mark each blank reading",
+        "summary": "Add one yes/no input per sensor: was this reading missing?",
+        "status": "active",
+        "owner_id": "r1",
+        "proposal_ids": [
+          "proposal-blank"
+        ],
+        "report_ids": [
+          "report-first-result"
+        ],
+        "created_at": "2026-01-15T10:18:00Z",
+        "updated_at": "2026-01-15T10:22:00Z",
+        "evidence": [],
+        "next_step": "Check the result on real sensor data.",
+        "presentation": {
+          "question": "How should we use the fact that a reading is missing?",
+          "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+          "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+          "factor": "Add one yes/no input per sensor: was this reading missing?",
+          "support": "This preserves the missing-reading clue while changing very little code.",
+          "outcome": "Compare prediction error with the same data split.",
+          "conditions": "A small synthetic dataset; three sensors; separate training and test rows.",
+          "experiment": {
+            "data": "Synthetic readings from three sensors; 4,000 training rows and 2,000 new test rows per split.",
+            "method": "Add one yes/no input per sensor: was this reading missing?",
+            "setup": "Use five independent splits. Fit all averages and model settings using only training rows. Compare with filling blanks using training averages.",
+            "expected_outcome": "Lower error when blank readings signal overload; little or no gain when readings disappear at random.",
+            "learning": "Whether keeping the missing-reading clue helps, and whether the extra complexity is worthwhile."
+          }
+        }
+      },
+      {
+        "id": "method-patterns",
+        "type": "method",
+        "revision": 1,
+        "title": "Use a model for each missing pattern",
+        "summary": "Train a separate model for each combination of blank sensors.",
+        "status": "unexplored",
+        "owner_id": "r2",
+        "proposal_ids": [
+          "proposal-blank"
+        ],
+        "report_ids": [],
+        "created_at": "2026-01-15T10:18:00Z",
+        "updated_at": "2026-01-15T10:22:00Z",
+        "evidence": [],
+        "next_step": "",
+        "presentation": {
+          "question": "How should we use the fact that a reading is missing?",
+          "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+          "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+          "factor": "Train a separate model for each combination of blank sensors.",
+          "support": "Each model can adapt to its pattern, but some patterns may have too little data.",
+          "outcome": "Compare prediction error with the same data split.",
+          "conditions": "A small synthetic dataset; three sensors; separate training and test rows.",
+          "experiment": {
+            "data": "Synthetic readings from three sensors; 4,000 training rows and 2,000 new test rows per split.",
+            "method": "Train a separate model for each combination of blank sensors.",
+            "setup": "Use five independent splits. Fit all averages and model settings using only training rows. Compare with filling blanks using training averages.",
+            "expected_outcome": "Lower error when blank readings signal overload; little or no gain when readings disappear at random.",
+            "learning": "Whether keeping the missing-reading clue helps, and whether the extra complexity is worthwhile."
+          }
+        }
+      },
+      {
+        "id": "method-average",
+        "type": "method",
+        "revision": 1,
+        "title": "Fill gaps with ordinary values",
+        "summary": "Replace each blank with the sensor’s average in the training data.",
+        "status": "explored",
+        "owner_id": "r3",
+        "proposal_ids": [
+          "proposal-blank"
+        ],
+        "report_ids": [
+          "report-first-result"
+        ],
+        "created_at": "2026-01-15T10:18:00Z",
+        "updated_at": "2026-01-15T10:22:00Z",
+        "evidence": [],
+        "next_step": "",
+        "presentation": {
+          "question": "How should we use the fact that a reading is missing?",
+          "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+          "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+          "factor": "Replace each blank with the sensor’s average in the training data.",
+          "support": "This is a cheap comparison point. It does not preserve the missing-reading clue.",
+          "outcome": "Compare prediction error with the same data split.",
+          "conditions": "A small synthetic dataset; three sensors; separate training and test rows.",
+          "experiment": {
+            "data": "Synthetic readings from three sensors; 4,000 training rows and 2,000 new test rows per split.",
+            "method": "Replace each blank with the sensor’s average in the training data.",
+            "setup": "Use five independent splits. Fit all averages and model settings using only training rows. Compare with filling blanks using training averages.",
+            "expected_outcome": "Lower error when blank readings signal overload; little or no gain when readings disappear at random.",
+            "learning": "Whether keeping the missing-reading clue helps, and whether the extra complexity is worthwhile."
+          }
+        }
+      },
+      {
+        "id": "method-similar",
+        "type": "method",
+        "revision": 1,
+        "title": "Borrow from similar complete readings",
+        "summary": "Find similar rows whose sensors all worked and borrow their values.",
+        "status": "unexplored",
+        "owner_id": "r1",
+        "proposal_ids": [
+          "proposal-blank"
+        ],
+        "report_ids": [],
+        "created_at": "2026-01-15T10:18:00Z",
+        "updated_at": "2026-01-15T10:22:00Z",
+        "evidence": [],
+        "next_step": "",
+        "presentation": {
+          "question": "How should we use the fact that a reading is missing?",
+          "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+          "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+          "factor": "Find similar rows whose sensors all worked and borrow their values.",
+          "support": "Similar cases may help, though this costs more and may erase the warning itself.",
+          "outcome": "Compare prediction error with the same data split.",
+          "conditions": "A small synthetic dataset; three sensors; separate training and test rows.",
+          "experiment": {
+            "data": "Synthetic readings from three sensors; 4,000 training rows and 2,000 new test rows per split.",
+            "method": "Find similar rows whose sensors all worked and borrow their values.",
+            "setup": "Use five independent splits. Fit all averages and model settings using only training rows. Compare with filling blanks using training averages.",
+            "expected_outcome": "Lower error when blank readings signal overload; little or no gain when readings disappear at random.",
+            "learning": "Whether keeping the missing-reading clue helps, and whether the extra complexity is worthwhile."
+          }
+        }
+      }
+    ],
+    "experiment": [
+      {
+        "id": "experiment-main",
+        "type": "experiment",
+        "revision": 1,
+        "status": "completed",
+        "title": "Can a blank reading be useful information?",
+        "owner_id": "engineer",
+        "summary": "Marking blank readings reduced error by 25.0% in the overload example.",
+        "purpose": "When sensor A is under high load, it is more likely to stop reporting. Can we use that clue?",
+        "prediction": "A model told which readings went blank should predict better than one given only filled-in numbers.",
+        "figures": [
+          {
+            "type": "bars",
+            "title": "Blank readings carry a clue",
+            "max": 2,
+            "unit": "Prediction error (lower is better)",
+            "rows": [
+              {
+                "label": "Fill gaps only",
+                "value": 1.613,
+                "display": "1.613",
+                "series": "fill_only"
+              },
+              {
+                "label": "Fill gaps + mark blanks",
+                "value": 1.211,
+                "display": "1.211",
+                "series": "missing_flags"
+              }
+            ],
+            "caption": "Average root mean squared error over five independent train/test splits. Synthetic data, arbitrary target units. Full per-seed results are included."
+          }
+        ],
+        "interpretation": "In this toy world, a missing reading often means sensor A was high. A yes/no flag lets the model adjust its prediction.",
+        "uncertainty": "The rule causing missing readings is deliberately simple and stays the same at test time. This is an illustration of a known method, not evidence of a new discovery or performance on real sensors.",
+        "next_step": "Try real data and check what happens when the sensor’s failure pattern changes.",
+        "setup": "4,000 training rows and 2,000 separate test rows per seed; five seeds. Means and model weights are fitted on training data only.",
+        "baseline": "Linear prediction after filling each missing value with its training-set mean.",
+        "data": "sample.csv contains the first split; run.py generates all five.",
+        "code_version": "examples/missing-measurements/run.py",
+        "settings": "The high-reading missing probability is 0.9; otherwise 0.1. The other sensors go blank independently with probability 0.12.",
+        "measures": "Root mean squared prediction error. Extra cost: three binary inputs, seven rather than four fitted coefficients including the intercept.",
+        "budget": "CPU only; no model calls or downloads.",
+        "cost": "Thirty fits per method across all conditions.",
+        "results": "{\n  \"pattern\": \"overload\",\n  \"high_missing_probability\": 0.9,\n  \"runs\": [\n    {\n      \"seed\": 11,\n      \"fill_only\": 1.6193982209570335,\n      \"missing_flags\": 1.1446337619465388\n    },\n    {\n      \"seed\": 22,\n      \"fill_only\": 1.6430779375861133,\n      \"missing_flags\": 1.2940260401197063\n    },\n    {\n      \"seed\": 33,\n      \"fill_only\": 1.5453655193245825,\n      \"missing_flags\": 1.1915760993317626\n    },\n    {\n      \"seed\": 44,\n      \"fill_only\": 1.6223208938935383,\n      \"missing_flags\": 1.2220770517102661\n    },\n    {\n      \"seed\": 55,\n      \"fill_only\": 1.6368340716969692,\n      \"missing_flags\": 1.2017446842893793\n    }\n  ],\n  \"mean_rmse\": {\n    \"fill_only\": 1.6133993286916473,\n    \"missing_flags\": 1.2108115274795306\n  },\n  \"mean_improvement_percent\": 24.952768608041186\n}",
+        "created_at": "2026-01-15T10:30:00Z",
+        "updated_at": "2026-01-15T10:35:00Z",
+        "proposal_ids": [
+          "proposal-blank"
+        ],
+        "method_ids": [
+          "method-flags",
+          "method-average"
+        ],
+        "library_ids": [
+          "lib-data",
+          "lib-baseline",
+          "lib-indicators"
+        ],
+        "report_ids": [
+          "report-first-result"
+        ],
+        "execution_outcome": "complete",
+        "scientific_outcome": "positive"
+      },
+      {
+        "id": "experiment-control",
+        "type": "experiment",
+        "revision": 1,
+        "status": "completed",
+        "title": "What if readings disappear at random?",
+        "owner_id": "engineer",
+        "summary": "The flags gave no benefit when missing readings carried no clue about the target.",
+        "purpose": "Keep the expected missing rate the same, but remove its link to high sensor readings.",
+        "figures": [
+          {
+            "type": "bars",
+            "title": "The random-missingness check",
+            "max": 2,
+            "unit": "Prediction error (lower is better)",
+            "rows": [
+              {
+                "label": "Fill gaps only",
+                "value": 1.249,
+                "display": "1.249",
+                "series": "fill_only"
+              },
+              {
+                "label": "Fill gaps + mark blanks",
+                "value": 1.251,
+                "display": "1.251",
+                "series": "missing_flags"
+              }
+            ],
+            "caption": "Average root mean squared error over five independent train/test splits. Synthetic data, arbitrary target units. Full per-seed results are included."
+          }
+        ],
+        "interpretation": "The first result depends on an informative failure pattern. Adding inputs alone was not enough to improve predictions.",
+        "uncertainty": "Five splits are useful for a demonstration, not a broad claim about all data.",
+        "next_step": "Check whether real sensor failures contain a similar clue.",
+        "setup": "Same fit, train/test sizes, and seeds. Missingness is independent of sensor values.",
+        "results": "{\n  \"pattern\": \"random\",\n  \"high_missing_probability\": 0.9,\n  \"runs\": [\n    {\n      \"seed\": 11,\n      \"fill_only\": 1.2423702806634287,\n      \"missing_flags\": 1.2423680356151832\n    },\n    {\n      \"seed\": 22,\n      \"fill_only\": 1.2479449698415042,\n      \"missing_flags\": 1.2548375966473184\n    },\n    {\n      \"seed\": 33,\n      \"fill_only\": 1.2049735989470554,\n      \"missing_flags\": 1.206925118713984\n    },\n    {\n      \"seed\": 44,\n      \"fill_only\": 1.2905093574276516,\n      \"missing_flags\": 1.2897253792130356\n    },\n    {\n      \"seed\": 55,\n      \"fill_only\": 1.2612597307859104,\n      \"missing_flags\": 1.2609448961974297\n    }\n  ],\n  \"mean_rmse\": {\n    \"fill_only\": 1.24941158753311,\n    \"missing_flags\": 1.2509602052773903\n  },\n  \"mean_improvement_percent\": -0.12394776547077768\n}",
+        "created_at": "2026-01-15T10:36:00Z",
+        "updated_at": "2026-01-15T10:38:00Z",
+        "proposal_ids": [
+          "proposal-blank"
+        ],
+        "method_ids": [
+          "method-flags"
+        ],
+        "library_ids": [
+          "lib-data"
+        ],
+        "report_ids": [
+          "report-first-result"
+        ],
+        "execution_outcome": "complete",
+        "scientific_outcome": "negative"
+      },
+      {
+        "id": "experiment-sweep",
+        "type": "experiment",
+        "revision": 1,
+        "status": "completed",
+        "title": "When does the clue become useful?",
+        "owner_id": "engineer",
+        "summary": "The benefit grew as high readings became more likely to disappear.",
+        "purpose": "Vary the chance that a high sensor reading goes blank.",
+        "figures": [
+          {
+            "type": "line",
+            "title": "Stronger missingness clue, larger benefit",
+            "x_label": "Chance a high reading goes blank",
+            "y_label": "Prediction error",
+            "series": [
+              {
+                "label": "Fill gaps only",
+                "points": [
+                  {
+                    "x": 0.3,
+                    "y": 1.0857
+                  },
+                  {
+                    "x": 0.6,
+                    "y": 1.361
+                  },
+                  {
+                    "x": 0.9,
+                    "y": 1.6134
+                  }
+                ]
+              },
+              {
+                "label": "Mark blank readings",
+                "points": [
+                  {
+                    "x": 0.3,
+                    "y": 1.0412
+                  },
+                  {
+                    "x": 0.6,
+                    "y": 1.1479
+                  },
+                  {
+                    "x": 0.9,
+                    "y": 1.2108
+                  }
+                ]
+              }
+            ],
+            "caption": "Each point averages five held-out tests. Raw per-seed values are in results.json. These lines show averages, not uncertainty intervals."
+          }
+        ],
+        "interpretation": "As more high readings disappear, the filled values become less reliable. Marking blanks recovers part of the lost information.",
+        "uncertainty": "Only three failure settings and one simple data-generating rule were tested.",
+        "setup": "High-reading missing probabilities of 0.3, 0.6, and 0.9. Other settings are unchanged.",
+        "results": "{\n  \"schema_version\": 1,\n  \"data\": \"synthetic independent sensor readings\",\n  \"train_rows_per_seed\": 4000,\n  \"test_rows_per_seed\": 2000,\n  \"seeds\": [\n    11,\n    22,\n    33,\n    44,\n    55\n  ],\n  \"metric\": \"root mean squared error; lower is better\",\n  \"results\": [\n    {\n      \"pattern\": \"overload\",\n      \"high_missing_probability\": 0.3,\n      \"runs\": [\n        {\n          \"seed\": 11,\n          \"fill_only\": 1.0563428734313436,\n          \"missing_flags\": 0.989561188464329\n        },\n        {\n          \"seed\": 22,\n          \"fill_only\": 1.0911916098222652,\n          \"missing_flags\": 1.088981020999357\n        },\n        {\n          \"seed\": 33,\n          \"fill_only\": 1.0496433976820854,\n          \"missing_flags\": 1.017919858573063\n        },\n        {\n          \"seed\": 44,\n          \"fill_only\": 1.1253678062699415,\n          \"missing_flags\": 1.066636688691965\n        },\n        {\n          \"seed\": 55,\n          \"fill_only\": 1.1057955743823054,\n          \"missing_flags\": 1.042938907691618\n        }\n      ],\n      \"mean_rmse\": {\n        \"fill_only\": 1.0856682523175882,\n        \"missing_flags\": 1.0412075328840664\n      },\n      \"mean_improvement_percent\": 4.095239898432235\n    },\n    {\n      \"pattern\": \"overload\",\n      \"high_missing_probability\": 0.6,\n      \"runs\": [\n        {\n          \"seed\": 11,\n          \"fill_only\": 1.3453607354207748,\n          \"missing_flags\": 1.0854084951475973\n        },\n        {\n          \"seed\": 22,\n          \"fill_only\": 1.3839827263592082,\n          \"missing_flags\": 1.2235107716217564\n        },\n        {\n          \"seed\": 33,\n          \"fill_only\": 1.3051701578385446,\n          \"missing_flags\": 1.1235593341816208\n        },\n        {\n          \"seed\": 44,\n          \"fill_only\": 1.3702228641522116,\n          \"missing_flags\": 1.1557692935594825\n        },\n        {\n          \"seed\": 55,\n          \"fill_only\": 1.4003878334495445,\n          \"missing_flags\": 1.1510470873734975\n        }\n      ],\n      \"mean_rmse\": {\n        \"fill_only\": 1.3610248634440567,\n        \"missing_flags\": 1.147858996376791\n      },\n      \"mean_improvement_percent\": 15.662158186284136\n    },\n    {\n      \"pattern\": \"overload\",\n      \"high_missing_probability\": 0.9,\n      \"runs\": [\n        {\n          \"seed\": 11,\n          \"fill_only\": 1.6193982209570335,\n          \"missing_flags\": 1.1446337619465388\n        },\n        {\n          \"seed\": 22,\n          \"fill_only\": 1.6430779375861133,\n          \"missing_flags\": 1.2940260401197063\n        },\n        {\n          \"seed\": 33,\n          \"fill_only\": 1.5453655193245825,\n          \"missing_flags\": 1.1915760993317626\n        },\n        {\n          \"seed\": 44,\n          \"fill_only\": 1.6223208938935383,\n          \"missing_flags\": 1.2220770517102661\n        },\n        {\n          \"seed\": 55,\n          \"fill_only\": 1.6368340716969692,\n          \"missing_flags\": 1.2017446842893793\n        }\n      ],\n      \"mean_rmse\": {\n        \"fill_only\": 1.6133993286916473,\n        \"missing_flags\": 1.2108115274795306\n      },\n      \"mean_improvement_percent\": 24.952768608041186\n    },\n    {\n      \"pattern\": \"random\",\n      \"high_missing_probability\": 0.3,\n      \"runs\": [\n        {\n          \"seed\": 11,\n          \"fill_only\": 0.988686418570677,\n          \"missing_flags\": 0.9895771479468198\n        },\n        {\n          \"seed\": 22,\n          \"fill_only\": 1.0458521033579602,\n          \"missing_flags\": 1.0511958208310859\n        },\n        {\n          \"seed\": 33,\n          \"fill_only\": 0.9712610488169415,\n          \"missing_flags\": 0.9725508822920007\n        },\n        {\n          \"seed\": 44,\n          \"fill_only\": 1.0356696955370432,\n          \"missing_flags\": 1.0405230273571247\n        },\n        {\n          \"seed\": 55,\n          \"fill_only\": 0.9779416915974846,\n          \"missing_flags\": 0.9773524234557898\n        }\n      ],\n      \"mean_rmse\": {\n        \"fill_only\": 1.0038821915760212,\n        \"missing_flags\": 1.006239860376564\n      },\n      \"mean_improvement_percent\": -0.23485512745688997\n    },\n    {\n      \"pattern\": \"random\",\n      \"high_missing_probability\": 0.6,\n      \"runs\": [\n        {\n          \"seed\": 11,\n          \"fill_only\": 1.1367708973402613,\n          \"missing_flags\": 1.1367477826010322\n        },\n        {\n          \"seed\": 22,\n          \"fill_only\": 1.1669813745839286,\n          \"missing_flags\": 1.1727455014201174\n        },\n        {\n          \"seed\": 33,\n          \"fill_only\": 1.0870476625723726,\n          \"missing_flags\": 1.0880475465808213\n        },\n        {\n          \"seed\": 44,\n          \"fill_only\": 1.186242213565991,\n          \"missing_flags\": 1.1851730688740405\n        },\n        {\n          \"seed\": 55,\n          \"fill_only\": 1.1358223409475658,\n          \"missing_flags\": 1.1356658007081961\n        }\n      ],\n      \"mean_rmse\": {\n        \"fill_only\": 1.1425728978020238,\n        \"missing_flags\": 1.1436759400368415\n      },\n      \"mean_improvement_percent\": -0.09654020648832695\n    },\n    {\n      \"pattern\": \"random\",\n      \"high_missing_probability\": 0.9,\n      \"runs\": [\n        {\n          \"seed\": 11,\n          \"fill_only\": 1.2423702806634287,\n          \"missing_flags\": 1.2423680356151832\n        },\n        {\n          \"seed\": 22,\n          \"fill_only\": 1.2479449698415042,\n          \"missing_flags\": 1.2548375966473184\n        },\n        {\n          \"seed\": 33,\n          \"fill_only\": 1.2049735989470554,\n          \"missing_flags\": 1.206925118713984\n        },\n        {\n          \"seed\": 44,\n          \"fill_only\": 1.2905093574276516,\n          \"missing_flags\": 1.2897253792130356\n        },\n        {\n          \"seed\": 55,\n          \"fill_only\": 1.2612597307859104,\n          \"missing_flags\": 1.2609448961974297\n        }\n      ],\n      \"mean_rmse\": {\n        \"fill_only\": 1.24941158753311,\n        \"missing_flags\": 1.2509602052773903\n      },\n      \"mean_improvement_percent\": -0.12394776547077768\n    }\n  ]\n}",
+        "created_at": "2026-01-15T10:39:00Z",
+        "updated_at": "2026-01-15T10:42:00Z",
+        "proposal_ids": [
+          "proposal-blank"
+        ],
+        "method_ids": [
+          "method-flags"
+        ],
+        "library_ids": [
+          "lib-data"
+        ],
+        "report_ids": [
+          "report-first-result"
+        ],
+        "execution_outcome": "complete",
+        "scientific_outcome": "positive"
+      }
+    ],
+    "meeting": [
+      {
+        "id": "meeting-question",
+        "type": "meeting",
+        "revision": 1,
+        "title": "Which question should we test first?",
+        "status": "completed",
+        "owner_id": "orchestrator",
+        "occurred_at": "2026-01-15T10:15:00Z",
+        "created_at": "2026-01-15T10:15:00Z",
+        "updated_at": "2026-01-15T10:15:00Z",
+        "summary": "Converged: all three recommended the same candidate. The human approved it.",
+        "participant_ids": [
+          "r1",
+          "r2",
+          "r3",
+          "engineer",
+          "mathematician",
+          "orchestrator"
+        ],
+        "human_decision": {
+          "action": "select",
+          "selected_id": "proposal-blank",
+          "comment": "Start with this small, clear test.",
+          "at": "2026-01-15T10:15:00Z"
+        },
+        "proposal_ids": [
+          "proposal-blank",
+          "proposal-history",
+          "proposal-neighbors"
+        ],
+        "method_ids": [],
+        "presentations": [
+          {
+            "id": "proposal-blank",
+            "title": "Can blank readings warn us of overload?",
+            "presentation": {
+              "question": "Can blank readings warn us of overload?",
+              "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+              "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+              "factor": "Tell the model which sensors went blank, as well as their filled-in readings.",
+              "support": "A sensor may stop reporting more often when its input is high. A blank reading can then be a clue.",
+              "outcome": "Lower prediction error on new rows, with a random-missingness check.",
+              "conditions": "A small synthetic dataset; three sensors; separate training and test rows."
+            },
+            "agent_id": "r1"
+          },
+          {
+            "id": "proposal-history",
+            "title": "Can recent readings fill short gaps?",
+            "presentation": {
+              "question": "Can recent readings fill short gaps?",
+              "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+              "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+              "factor": "Use earlier readings from the same sensor to estimate a short gap.",
+              "support": "Many physical signals change gradually. A recent reading may be better than the average.",
+              "outcome": "Better predictions during short gaps in a future time-series dataset.",
+              "conditions": "A small synthetic dataset; three sensors; separate training and test rows."
+            },
+            "agent_id": "r2"
+          },
+          {
+            "id": "proposal-neighbors",
+            "title": "Can sensors check one another?",
+            "presentation": {
+              "question": "Can sensors check one another?",
+              "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+              "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+              "factor": "Use sensors that measure related things to estimate a missing reading.",
+              "support": "Nearby sensors may share information, but our first toy dataset deliberately lacks that structure.",
+              "outcome": "Lower error when sensors share a signal; defer until we have suitable data.",
+              "conditions": "A small synthetic dataset; three sensors; separate training and test rows."
+            },
+            "agent_id": "r3"
+          }
+        ],
+        "votes": [
+          {
+            "agent_id": "r1",
+            "choice": "proposal-blank",
+            "reason": "A clear question with a cheap test and a useful random-missingness check."
+          },
+          {
+            "agent_id": "r2",
+            "choice": "proposal-blank",
+            "reason": "Existing work gives us a sound starting point; we can test the limitation without new data."
+          },
+          {
+            "agent_id": "r3",
+            "choice": "proposal-blank",
+            "reason": "We can isolate one change, so the first result should be easy to interpret."
+          }
+        ],
+        "notes": "Scripted example of a completed meeting; these are not live agent votes."
+      },
+      {
+        "id": "meeting-method",
+        "type": "meeting",
+        "revision": 1,
+        "title": "Choose the smallest useful change",
+        "status": "completed",
+        "owner_id": "orchestrator",
+        "occurred_at": "2026-01-15T10:22:00Z",
+        "created_at": "2026-01-15T10:22:00Z",
+        "updated_at": "2026-01-15T10:22:00Z",
+        "summary": "Converged: all three recommended the same candidate. The human approved it.",
+        "participant_ids": [
+          "r1",
+          "r2",
+          "r3",
+          "engineer",
+          "mathematician",
+          "orchestrator"
+        ],
+        "human_decision": {
+          "action": "select",
+          "selected_id": "method-flags",
+          "comment": "Start with this small, clear test.",
+          "at": "2026-01-15T10:22:00Z"
+        },
+        "proposal_ids": [
+          "proposal-blank"
+        ],
+        "method_ids": [
+          "method-flags",
+          "method-patterns",
+          "method-similar"
+        ],
+        "presentations": [
+          {
+            "id": "method-flags",
+            "title": "Mark each blank reading",
+            "presentation": {
+              "question": "How should we use the fact that a reading is missing?",
+              "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+              "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+              "factor": "Add one yes/no input per sensor: was this reading missing?",
+              "support": "This preserves the missing-reading clue while changing very little code.",
+              "outcome": "Compare prediction error with the same data split.",
+              "conditions": "A small synthetic dataset; three sensors; separate training and test rows.",
+              "experiment": {
+                "data": "Synthetic readings from three sensors; 4,000 training rows and 2,000 new test rows per split.",
+                "method": "Add one yes/no input per sensor: was this reading missing?",
+                "setup": "Use five independent splits. Fit all averages and model settings using only training rows. Compare with filling blanks using training averages.",
+                "expected_outcome": "Lower error when blank readings signal overload; little or no gain when readings disappear at random.",
+                "learning": "Whether keeping the missing-reading clue helps, and whether the extra complexity is worthwhile."
+              }
+            },
+            "agent_id": "r1"
+          },
+          {
+            "id": "method-patterns",
+            "title": "Use a model for each missing pattern",
+            "presentation": {
+              "question": "How should we use the fact that a reading is missing?",
+              "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+              "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+              "factor": "Train a separate model for each combination of blank sensors.",
+              "support": "Each model can adapt to its pattern, but some patterns may have too little data.",
+              "outcome": "Compare prediction error with the same data split.",
+              "conditions": "A small synthetic dataset; three sensors; separate training and test rows.",
+              "experiment": {
+                "data": "Synthetic readings from three sensors; 4,000 training rows and 2,000 new test rows per split.",
+                "method": "Train a separate model for each combination of blank sensors.",
+                "setup": "Use five independent splits. Fit all averages and model settings using only training rows. Compare with filling blanks using training averages.",
+                "expected_outcome": "Lower error when blank readings signal overload; little or no gain when readings disappear at random.",
+                "learning": "Whether keeping the missing-reading clue helps, and whether the extra complexity is worthwhile."
+              }
+            },
+            "agent_id": "r2"
+          },
+          {
+            "id": "method-similar",
+            "title": "Borrow from similar complete readings",
+            "presentation": {
+              "question": "How should we use the fact that a reading is missing?",
+              "prior_work": "A common shortcut fills a blank sensor reading with its usual value.",
+              "gap": "That hides the difference between a real ordinary reading and no reading at all.",
+              "factor": "Find similar rows whose sensors all worked and borrow their values.",
+              "support": "Similar cases may help, though this costs more and may erase the warning itself.",
+              "outcome": "Compare prediction error with the same data split.",
+              "conditions": "A small synthetic dataset; three sensors; separate training and test rows.",
+              "experiment": {
+                "data": "Synthetic readings from three sensors; 4,000 training rows and 2,000 new test rows per split.",
+                "method": "Find similar rows whose sensors all worked and borrow their values.",
+                "setup": "Use five independent splits. Fit all averages and model settings using only training rows. Compare with filling blanks using training averages.",
+                "expected_outcome": "Lower error when blank readings signal overload; little or no gain when readings disappear at random.",
+                "learning": "Whether keeping the missing-reading clue helps, and whether the extra complexity is worthwhile."
+              }
+            },
+            "agent_id": "r1"
+          }
+        ],
+        "votes": [
+          {
+            "agent_id": "r1",
+            "choice": "method-flags",
+            "reason": "Three extra inputs are enough to test the shared idea."
+          },
+          {
+            "agent_id": "r2",
+            "choice": "method-flags",
+            "reason": "The same training split and predictor keep the comparison fair."
+          },
+          {
+            "agent_id": "r3",
+            "choice": "method-flags",
+            "reason": "This is easy to reproduce and has an obvious check: remove the missingness clue."
+          }
+        ],
+        "notes": "Scripted example of a completed meeting; these are not live agent votes."
+      }
+    ]
+  },
+  "tasks": [],
+  "warnings": [],
+  "requests": [],
+  "demo_summary": {
+    "title": "From a question to a checked result",
+    "text": "25.0% less prediction error in the overload example. No benefit when readings disappeared at random.",
+    "experiment_id": "experiment-main",
+    "report_id": "report-first-result"
+  },
+  "record_questions": [
+    {
+      "id": "question-control",
+      "record_type": "experiment",
+      "record_id": "experiment-main",
+      "created_at": "2026-01-15T10:39:00Z",
+      "body": "Does this mean extra inputs always improve predictions?",
+      "replies": [
+        {
+          "id": "reply-control",
+          "agent_id": "r3",
+          "created_at": "2026-01-15T10:40:00Z",
+          "body": "No. In the random-missingness check, the flags did not help. Here, they help only because a missing reading tells us something about the hidden sensor value."
+        }
+      ]
+    }
+  ]
+}

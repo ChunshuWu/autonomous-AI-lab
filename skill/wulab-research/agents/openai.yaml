@@ -1,0 +1,4 @@
+interface:
+  display_name: "WuLab Research"
+  short_description: "Two stages: a feasible proposal, then focused research"
+  default_prompt: "Use $wulab-research to develop a focused, feasible research proposal and investigate its central question."

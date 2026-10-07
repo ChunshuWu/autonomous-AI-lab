@@ -1,0 +1,28 @@
+import assert from 'node:assert/strict';
+import {documentFixture} from './documents-fixture.mjs';
+import {renderDocument,documentText,renderDocumentMarkdown,reportAnchorExists} from './documents.mjs';
+import {validateReport} from './logic.mjs';
+import {askReviewQuestion,replyReviewQuestion} from './review-chat.mjs';
+import {validateEarlierReports} from './report-history.mjs';
+import worker from './worker.mjs';
+import {adapter} from './tests.mjs';
+const f=await documentFixture(),r=f.report,s=f.state,before=structuredClone(s);
+assert.equal(r.format,'document');assert.equal(r.background,undefined);assert.equal(r.findings,undefined);
+const html=renderDocument(r);assert(html.includes('class="line-plot"'));assert(html.includes('class="flow-figure"'));assert(html.includes('section-progress'));assert(!html.includes('class="slide"'));assert(!html.includes('Original slides'));
+assert.equal((html.match(/<section id="section-/g)||[]).length,3);
+assert(documentText(r).includes('| Method A | 1 | 2 |'));assert(documentText(r).includes('Earlier reports'));assert(documentText(r).includes('Draft a short reading outline'));
+assert(reportAnchorExists(r,'section-background'));assert(reportAnchorExists(r,'direction-idea-a'));assert(!reportAnchorExists(r,'slide-1'));
+assert.deepEqual(s,before);
+const q=askReviewQuestion(s,{report_id:r.id,agent_id:f.agents[0].id,body:'What does the plot show?',client_id:'doc-question',slide_id:'section-progress'});
+replyReviewQuestion(s,{report_id:r.id,question_id:q.id,agent_id:f.agents[0].id,body:'It illustrates the format with made-up data.',client_id:'doc-answer',references:[{report_id:r.id,slide_id:'section-progress'}]});
+assert.equal(q.replies[0].references[0].slide_id,'section-progress');assert.deepEqual(s.agents,before.agents);
+assert.throws(()=>askReviewQuestion(s,{report_id:r.id,agent_id:f.agents[0].id,body:'Wrong section?',client_id:'wrong-section',slide_id:'slide-1'}),/existing section/);
+validateEarlierReports(s,{previous_reports:[{report_id:r.id,anchor:'section-progress'}]});
+const hostile=renderDocumentMarkdown('<img src=x onerror=alert(1)>\n\n[Bad](javascript:alert) **ok** `x < y`');
+assert(!hostile.includes('<img'));assert(!hostile.includes('href="javascript:'));assert(hostile.includes('<strong>ok</strong>'));assert(hostile.includes('&lt;'));
+const invalid=structuredClone(r);invalid.figures[1].visual.y_scale='log';invalid.figures[1].visual.series[0].points[0].y=0;
+assert.throws(()=>validateReport(invalid,{plan:r.previous_steps,prior_proposals:[],report_only_closed:true}),/positive/);
+const db=adapter();await db.prepare('CREATE TABLE workspaces (name TEXT PRIMARY KEY, document TEXT NOT NULL, revision INTEGER NOT NULL DEFAULT 1)').run();await db.prepare('INSERT INTO workspaces(name,document) VALUES(?,?)').bind(f.workspace,JSON.stringify(s)).run();
+for(const [path,needle] of [['/documents/','line-plot'],['/slides/','section-progress']]){const response=await worker.fetch(new Request('https://example.test'+path+r.id+'?workspace='+f.workspace),{DB:db});assert.equal(response.status,200);assert((await response.text()).includes(needle));}
+const md=await worker.fetch(new Request('https://example.test/documents/'+r.id+'.md?workspace='+f.workspace),{DB:db});assert.equal(md.status,200);assert((await md.text()).includes('# '+r.title));
+console.log('PASS: illustrated documents, Markdown export, native charts, safe markup, legacy links, section questions and unchanged research permission.');

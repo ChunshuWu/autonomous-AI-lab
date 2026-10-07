@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {Store} from './store.mjs';import {adapter} from './tests.mjs';import {seeds} from './fixtures/seeds.mjs';
+const store=new Store(adapter(),seeds);await store.init();await store.apply('archive-check',{action:'create_project',name:'Archive check'},'director');
+const a=await store.apply('archive-check',{action:'add_agent',name:'Researcher',role:'researcher',specialty:'Test',question:'Test',plan:['Wait']},'director');
+const before=(await store.read('archive-check')).state;const library=await store.library();
+await assert.rejects(()=>store.apply('archive-check',{action:'archive_project',reason:'Test'},'worker'));
+await store.apply('archive-check',{action:'archive_project',reason:'Director requested a fresh start.'},'director');
+const after=(await store.read('archive-check')).state;assert(after.project.archived_at);assert(after.paused);assert.equal(after.agents[0].dashboard_cat_id,before.agents[0].dashboard_cat_id);assert.deepEqual(await store.library(),library);
+await store.apply('archive-check',{action:'archive_project',reason:'Director requested a fresh start.'},'director');assert.equal((await store.read('archive-check')).state.events.length,after.events.length);
+await assert.rejects(()=>store.apply('archive-check',{action:'resume_lab'},'director'));assert(!(await store.projects()).some(p=>p.id==='archive-check'));
+await store.apply('new-after-archive',{action:'create_project',name:'New'},'director');const b=await store.apply('new-after-archive',{action:'add_agent',name:'New',role:'researcher',specialty:'Test',question:'Test',plan:['Wait']},'director');assert.equal(a.dashboard_cat_id,b.dashboard_cat_id);
+console.log('PASS: reversible archive, read-only history, preserved library/cats, idempotency and fresh identities.');
