@@ -41,5 +41,4 @@ const rich=browser.render(md);assert(rich.includes('class="katex"'));assert(!ric
 assert(!browser.render(String.raw`$\href{javascript:alert(1)}{unsafe}$`).includes('href="javascript:'));
 const task={id:'markdown-check',summary:'Preview',result:{document:md},finished_at:'2026-10-06'};
 const page=renderTaskDocument(task,'Researcher','fixture');assert(page.includes('/math.js'));assert(page.includes('<main class="markdown-body">'));assert(page.includes('format=markdown'));assert.equal(task.result.document,md);
-fs.writeFileSync('/tmp/wulab-shared-focus/markdown-fixture.md',md);fs.writeFileSync('/tmp/wulab-shared-focus/markdown-fixture.html',page);
 console.log('Passed formatted headings, lists, tables, quotes, links, code, inline/display equations, safe markup and unchanged Markdown export.');

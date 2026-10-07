@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
 import {decideHumanMeeting,workflowTick} from './workflow.mjs';
 import {taskAction,rejectedCandidates} from './tasks.mjs';
 import {Store} from './store.mjs';
@@ -69,7 +68,6 @@ assert.equal((await ready()).length,0,'Pending human questions keep dependent wo
 await store.apply(name,{action:'record_reply',question_id:late.id,agent_id:candidate.agent_id,client_id:'late-answer',body:'Both methods see exactly the same later examples.'},'worker');
 batch=await ready();assert.equal(batch.length,6,'A late reply is shared with every participant');for(const p of batch){assert.equal(p.workflow_context.director_decision.conversations.length,2);await finish(p);}
 s=await selection();rejectionCheck(s);assert.equal(s.workflow.stage,'Research');assert.equal(s.workflow.selected_proposal,candidate.id);assert(s.research_map.nodes.filter(n=>n.id!==candidate.id).every(n=>n.status==='unexplored'),'Unselected candidates are not automatically rejected');assert(s.research_records.meeting.at(-1).presentations.every(c=>c.presentation.experiment?.setup));
-fs.writeFileSync('/tmp/wulab-human-preview.json',JSON.stringify(s));
 const methodMeeting=s.research_records.meeting.at(-1),method=methodMeeting.presentations[0];assert.equal(s.tasks.filter(t=>t.kind==='engineering').length,0);
 await store.apply(name,{action:'workflow_meeting_decision',meeting_id:methodMeeting.id,expected_revision:methodMeeting.revision,client_id:'choose2',next_step:'select',choice:method.id,comment:''},'director');
 batch=await ready();assert.equal(batch.length,6);await finish(batch[0]);assert.equal((await ready()).length,0,'Unfinished handoffs cannot launch an experiment');for(const p of batch.slice(1))await finish(p);
